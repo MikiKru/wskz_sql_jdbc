@@ -1,6 +1,4 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class DatabaseApp {
     public Connection getConn(String db_name, String username, String password){
@@ -25,10 +23,25 @@ public class DatabaseApp {
             e.printStackTrace();
         }
     }
+    public void getAuthors(Connection conn){
+        try {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM author;");
+            ResultSet authors = ps.executeQuery();
+            while (authors.next()){
+                System.out.println(authors.getInt(1));
+                System.out.println(authors.getString(2));
+                System.out.println(authors.getString(3));
+                System.out.println("==============================");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void main(String[] args) {
         DatabaseApp databaseApp = new DatabaseApp();
         Connection conn = databaseApp.getConn("blog_db", "blog_user","qwe123");
+        databaseApp.getAuthors(conn);
         databaseApp.closeConn(conn);
     }
 }
